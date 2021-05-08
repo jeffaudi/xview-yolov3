@@ -2,7 +2,7 @@
 numpy
 scipy
 opencv-python
-torch
+torch==1.7.1
 matplotlib
 tqdm
 h5py
