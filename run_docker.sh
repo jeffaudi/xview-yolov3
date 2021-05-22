@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 BUILD=false
 INTER=false
-GPU=false
+GPU=true
 IMAGE=xview-yolov3
 CODE_DIR=$PWD
-#DATA_DIR=/home/jean_francois_faudi/data
-DATA_DIR=/home/jeff/Data/
+DATA_DIR=/home/jean_francois_faudi/data
+#DATA_DIR=/home/jeff/Data/
 
 for i in "$@"
 do

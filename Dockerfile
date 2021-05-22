@@ -68,36 +68,8 @@ RUN nodejs -v
 RUN ln -sf /usr/bin/python3 /usr/bin/python & \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
+# pip should be upgraded as root
 RUN pip install --upgrade pip
-
-# Main Pytonh libraries
-RUN pip install setuptools-scm &&  \
-        pip install --upgrade setuptools && \
-        pip install --upgrade numpy==1.17 && \
-        pip install --upgrade opencv-python && \
-        pip install --upgrade rasterio && \
-        pip install --upgrade Pillow==6.2.1 && \
-        pip install --upgrade scikit-image && \
-        pip install --upgrade scikit-learn && \
-        pip install --upgrade tornado && \
-        pip install --upgrade requests && \
-        pip install --upgrade requests_toolbelt && \
-        pip install --upgrade ipyleaflet && \
-        pip install --upgrade joblib && \
-        pip install --upgrade seaborn && \ 
-        pip install --upgrade torch && \
-        pip install --upgrade torchvision && \ 
-        pip install --upgrade torchviz && \ 
-        pip install --upgrade pytorch_lightning && \
-        pip install --upgrade jupyterthemes && \
-        pip install --upgrade jupyterlab
-        
-RUN jupyter labextension install jupyter-leaflet
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
-
-# Specific requirements for current project
-COPY requirements.txt .
-RUN pip install --upgrade -r requirements.txt
 
 # Get current user from BUILD parameters
 ARG USER_ID
@@ -110,8 +82,27 @@ RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID jovyan
 # Switch back to jovyan to avoid accidental container running as root
 USER jovyan
 
-RUN jupyter notebook --generate-config
-RUN echo "c.ServerApp.password='sha1:da0014b37d99:8b1fe5702d694e65462951262685da2c199facd2'">>$HOME/.jupyter/jupyter_notebook_config.py
+# Add .local/bin to PATH
+ENV PATH="/home/jovyan/.local/bin:$PATH"
+
+# Main Python libraries
+RUN pip install setuptools-scm &&  \
+        pip install --user --upgrade setuptools && \
+        pip install --user --upgrade wheel && \
+        pip install --user --upgrade tornado && \
+        pip install --user --upgrade ipyleaflet && \
+        pip install --user --upgrade jupyterthemes && \
+        pip install --user --upgrade jupyterlab
+        
+RUN jupyter labextension install jupyter-leaflet
+RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+# Specific requirements for current project
+COPY --chown=jovyan:jovyan requirements.txt .
+RUN pip install --user --upgrade -r requirements.txt
+
+RUN jupyter lab --generate-config
+RUN echo "c.ServerApp.password='sha1:da0014b37d99:8b1fe5702d694e65462951262685da2c199facd2'">>$HOME/.jupyter/jupyter_lab_config.py
 
 # Jupyter entrypoint in /home/jovyan/code
 WORKDIR /home/jovyan/code/

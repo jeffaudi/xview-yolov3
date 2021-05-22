@@ -16,8 +16,8 @@ if platform == 'darwin':  # macos
     cuda = False  # torch.cuda.is_available()
 else:  # gcp
     # cd yolo && python3 detect.py -secondary_classifier 1
-    parser.add_argument('-image_folder', type=str, default='../train_images/5.tif', help='path to images')
-    parser.add_argument('-output_folder', type=str, default='../output', help='path to outputs')
+    parser.add_argument('-image_folder', type=str, default='/data/xview/train_images/600.tif', help='path to images')
+    parser.add_argument('-output_folder', type=str, default='./output', help='path to outputs')
     cuda = False
 
 parser.add_argument('-plot_flag', type=bool, default=True)
@@ -42,7 +42,7 @@ def detect(opt):
 
     # Load model 1
     model = Darknet(opt.cfg, opt.img_size)
-    checkpoint = torch.load('weights/xview_best_lite.pt', map_location='cpu')
+    checkpoint = torch.load('weights/best.pt', map_location='cpu')
 
     model.load_state_dict(checkpoint['model'])
     model.to(device).eval()

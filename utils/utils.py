@@ -464,7 +464,7 @@ def createChips():
         if platform == 'darwin':  # macos
             img = cv2.imread('/Users/glennjocher/Downloads/DATA/xview/train_images/%g.tif' % i)
         else:  # gcp
-            img = cv2.imread('../train_images/%g.tif' % i)
+            img = cv2.imread('/data/xview/train_images/%g.tif' % i)
 
         for j in np.nonzero(mat['id'] == i)[0]:
             c, x1, y1, x2, y2 = mat['targets'][j]

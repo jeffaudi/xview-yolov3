@@ -40,7 +40,7 @@ def main(opt):
     if platform == 'darwin':  # MacOS (local)
         train_path = '/Users/glennjocher/Downloads/DATA/xview/train_images'
     else: # linux (GCP cloud)
-        train_path = '../train_images'
+        train_path = '/data/xview/train_images'
 
     # Initialize model
     model = Darknet(opt.cfg, opt.img_size)
